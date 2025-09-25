@@ -854,10 +854,33 @@ tampTab:Button({
 })
 
 -- Final notif
-notify("BANTAI GUNUNG", "Script sudan di load, gunakan dengan bijak.", 3)
+notify("BANTAI GUNUNG", "Script sudah di load, gunakan dengan bijak.", 3)
 
 pcall(function()
     Window:Show()
     MainTab:Show()
 end)
+
+-- ===============================
+-- AUTO INVINCIBLE HEALTH
+-- ===============================
+local invincibleHealth = 1e9 -- nilai tinggi supaya ga mati
+
+local function lockHealth(character)
+    local humanoid = character:WaitForChild("Humanoid")
+    humanoid.Health = invincibleHealth
+    humanoid:GetPropertyChangedSignal("Health"):Connect(function()
+        if humanoid.Health < invincibleHealth then
+            humanoid.Health = invincibleHealth
+        end
+    end)
+end
+
+-- Kalau karakter sudah ada
+if player.Character then
+    lockHealth(player.Character)
+end
+
+-- Event saat karakter respawn / muncul
+player.CharacterAdded:Connect(lockHealth)
 
